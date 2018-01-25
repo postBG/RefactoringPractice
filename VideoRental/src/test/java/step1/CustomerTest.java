@@ -20,7 +20,7 @@ public class CustomerTest {
 
     @Test
     public void statement_for_regularMovie(){
-        customer.addRental(createRental());
+        customer.addRental(createRental(2, Movie.REGULAR));
 
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
                 "\t2.0(TITLE_NOT_IMPORTANT)\n" +
@@ -28,9 +28,59 @@ public class CustomerTest {
                 "You earned 1 frequent renter pointers", customer.statement());
     }
 
-    private Rental createRental() {
-        Movie movie = new Movie("TITLE_NOT_IMPORTANT", Movie.REGULAR);
-        return new Rental(movie, 0);
+    @Test
+    public void statement_for_regularMovie_daysRented_is_larger_than_2(){
+        customer.addRental(createRental(3, Movie.REGULAR));
+
+        assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
+                "\t3.5(TITLE_NOT_IMPORTANT)\n" +
+                "Amount owed is 3.5\n" +
+                "You earned 1 frequent renter pointers", customer.statement());
+    }
+
+    @Test
+    public void statement_for_newReleasedMovie(){
+        customer.addRental(createRental(3, Movie.NEW_RELEASE));
+
+        assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
+                "\t9.0(TITLE_NOT_IMPORTANT)\n" +
+                "Amount owed is 9.0\n" +
+                "You earned 2 frequent renter pointers", customer.statement());
+    }
+
+    @Test
+    public void statement_for_newReleasedMovie_daysRented_smaller_equal_than_1(){
+        customer.addRental(createRental(1, Movie.NEW_RELEASE));
+
+        assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
+                "\t3.0(TITLE_NOT_IMPORTANT)\n" +
+                "Amount owed is 3.0\n" +
+                "You earned 1 frequent renter pointers", customer.statement());
+    }
+
+    @Test
+    public void statement_for_childrenMovie(){
+        customer.addRental(createRental(3, Movie.CHILDRENS));
+
+        assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
+                "\t1.5(TITLE_NOT_IMPORTANT)\n" +
+                "Amount owed is 1.5\n" +
+                "You earned 1 frequent renter pointers", customer.statement());
+    }
+
+    @Test
+    public void statement_for_childrenMovie_daysRented_is_larger_than_3(){
+        customer.addRental(createRental(4, Movie.CHILDRENS));
+
+        assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
+                "\t3.0(TITLE_NOT_IMPORTANT)\n" +
+                "Amount owed is 3.0\n" +
+                "You earned 1 frequent renter pointers", customer.statement());
+    }
+
+    private Rental createRental(int daysRented, int priceCode) {
+        Movie movie = new Movie("TITLE_NOT_IMPORTANT", priceCode);
+        return new Rental(movie, daysRented);
     }
 
 }
