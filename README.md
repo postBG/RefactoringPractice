@@ -20,3 +20,12 @@ original은 legacy 코드인데 이것을 리펙토링하는 것이 목적
   * High Cohesion & Low Coupling
   * Tell Don't Ask: 그냥 시키면 되는데 물어보고 자기가 하면 노답 ㅉㅉ
   * 이런 경우 참조하는 클래스로 메소드를 move할 수 있는지 고려해봐야함
+
+#### Other things
+
+* 좋은 프로그래머? 
+  * 요구사항에 맞게 설계를 변경할 수 있는가?
+* 전문 용어
+  * Guard clause
+  * Type Code
+
