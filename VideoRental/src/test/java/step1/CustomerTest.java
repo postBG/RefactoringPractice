@@ -29,7 +29,7 @@ public class CustomerTest {
     }
 
     @Test
-    public void statement_for_regularMovie_daysRented_is_larger_than_2(){
+    public void statement_for_regularMovie_daysRented_is_greater_than_2(){
         customer.addRental(createRental(3, Movie.REGULAR));
 
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
@@ -49,7 +49,7 @@ public class CustomerTest {
     }
 
     @Test
-    public void statement_for_newReleasedMovie_daysRented_smaller_equal_than_1(){
+    public void statement_for_newReleasedMovie_daysRented_less_equal_than_1(){
         customer.addRental(createRental(1, Movie.NEW_RELEASE));
 
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
@@ -69,7 +69,7 @@ public class CustomerTest {
     }
 
     @Test
-    public void statement_for_childrenMovie_daysRented_is_larger_than_3(){
+    public void statement_for_childrenMovie_daysRented_is_greater_than_3(){
         customer.addRental(createRental(4, Movie.CHILDRENS));
 
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
