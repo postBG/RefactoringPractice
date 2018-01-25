@@ -19,36 +19,11 @@ class Customer {
         return name;
     }
 
-    public String statement() {
-
-        String result = statementHeader();
-        result += getRentalLines();
-        result += statementFooter();
-
-        return result;
+    public List<Rental> getRentals() {
+        return rentals;
     }
 
-    private String statementFooter() {
-        String result = "Amount owed is " + String.valueOf(getTotalAmount()) + "\n";
-        result += "You earned " + String.valueOf(getFrequentRenterPoints()) + " frequent renter pointers";
-        return result;
-    }
-
-    private String statementHeader() {
-        return "Rental Record for " + getName() + "\n";
-    }
-
-    private String getRentalLines() {
-        String result = "";
-
-        for (Rental rental : rentals) {
-            // show figures
-            result += "\t" + String.valueOf(rental.getAmount()) + "(" + rental.getMovie().getTitle() + ")" + "\n";
-        }
-        return result;
-    }
-
-    private double getTotalAmount() {
+    public double getTotalAmount() {
         double totalAmount = 0;
 
         for (Rental rental : rentals) {
@@ -57,7 +32,7 @@ class Customer {
         return totalAmount;
     }
 
-    private int getFrequentRenterPoints() {
+    public int getFrequentRenterPoints() {
         int frequentRenterPoints = 0
                 ;
         for (Rental rental : rentals) {

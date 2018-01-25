@@ -10,12 +10,13 @@ import static org.junit.Assert.*;
 public class CustomerTest {
 
     private Customer customer = new Customer("NAME_NOT_IMPORTANT");
+    private Statement statement = new Statement();
 
     @Test
     public void statement_for_noRental(){
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
                 "Amount owed is 0.0\n" +
-                "You earned 0 frequent renter pointers", customer.statement());
+                "You earned 0 frequent renter pointers", statement.statement(customer));
     }
 
     @Test
@@ -25,7 +26,7 @@ public class CustomerTest {
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
                 "\t2.0(TITLE_NOT_IMPORTANT)\n" +
                 "Amount owed is 2.0\n" +
-                "You earned 1 frequent renter pointers", customer.statement());
+                "You earned 1 frequent renter pointers", statement.statement(customer));
     }
 
     @Test
@@ -35,7 +36,7 @@ public class CustomerTest {
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
                 "\t3.5(TITLE_NOT_IMPORTANT)\n" +
                 "Amount owed is 3.5\n" +
-                "You earned 1 frequent renter pointers", customer.statement());
+                "You earned 1 frequent renter pointers", statement.statement(customer));
     }
 
     @Test
@@ -45,7 +46,7 @@ public class CustomerTest {
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
                 "\t9.0(TITLE_NOT_IMPORTANT)\n" +
                 "Amount owed is 9.0\n" +
-                "You earned 2 frequent renter pointers", customer.statement());
+                "You earned 2 frequent renter pointers", statement.statement(customer));
     }
 
     @Test
@@ -55,7 +56,7 @@ public class CustomerTest {
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
                 "\t3.0(TITLE_NOT_IMPORTANT)\n" +
                 "Amount owed is 3.0\n" +
-                "You earned 1 frequent renter pointers", customer.statement());
+                "You earned 1 frequent renter pointers", statement.statement(customer));
     }
 
     @Test
@@ -65,7 +66,7 @@ public class CustomerTest {
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
                 "\t1.5(TITLE_NOT_IMPORTANT)\n" +
                 "Amount owed is 1.5\n" +
-                "You earned 1 frequent renter pointers", customer.statement());
+                "You earned 1 frequent renter pointers", statement.statement(customer));
     }
 
     @Test
@@ -75,7 +76,7 @@ public class CustomerTest {
         assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
                 "\t3.0(TITLE_NOT_IMPORTANT)\n" +
                 "Amount owed is 3.0\n" +
-                "You earned 1 frequent renter pointers", customer.statement());
+                "You earned 1 frequent renter pointers", statement.statement(customer));
     }
 
     @Test
@@ -89,7 +90,7 @@ public class CustomerTest {
                 "\t6.0(TITLE_NOT_IMPORTANT)\n" +
                 "\t1.5(TITLE_NOT_IMPORTANT)\n" +
                 "Amount owed is 9.5\n" +
-                "You earned 4 frequent renter pointers", customer.statement());
+                "You earned 4 frequent renter pointers", statement.statement(customer));
     }
 
     private Rental createRental(int daysRented, int priceCode) {
