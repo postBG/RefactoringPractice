@@ -4,6 +4,8 @@ public class Movie {
     public static final int CHILDRENS = 2;
     public static final int REGULAR = 0;
     public static final int NEW_RELEASE = 1;
+    public static final int BASE_FREQUENT_RENTER_POINTS = 1;
+    public static final int ADDITIONAL_FREQUENT_RENTAL_POINTS = 1;
 
     private String title;
     private int priceCode;
@@ -30,11 +32,6 @@ public class Movie {
     }
 
     public int getFrequentRenterPoints(int daysRented) {
-        int frequentRenterPoints = 1;
-
-        if ((getPriceCode() == NEW_RELEASE) && daysRented > 1)
-            frequentRenterPoints++;
-
-        return frequentRenterPoints;
+        return BASE_FREQUENT_RENTER_POINTS;
     }
 }

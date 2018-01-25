@@ -104,10 +104,12 @@ public class CustomerTest {
         if(priceCode == Movie.REGULAR) {
             return new RegularMovie(title);
         }
-        else if(priceCode == Movie.NEW_RELEASE) {
+
+        if(priceCode == Movie.NEW_RELEASE) {
             return new NewReleasedMovie(title);
         }
-        else if(priceCode == Movie.CHILDRENS){
+
+        if(priceCode == Movie.CHILDRENS){
             return new ChildrenMovie(title);
         }
 
