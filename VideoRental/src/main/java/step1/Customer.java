@@ -23,19 +23,14 @@ class Customer {
 	public String statement() {
 		double totalAmount = 0;
 		int frequentRenterPoints = 0;
-		Iterator<Rental> iterator = rentals.iterator();
 		String result = "Rental Record for " + getName() + "\n";
 
-		while ( iterator.hasNext() ) {
-			Rental rental = iterator.next();
-			double thisAmount = rental.getAmount();
+		for(Rental rental : rentals) {
             frequentRenterPoints += rental.getFrequentRenterPoints();
-
+            totalAmount += rental.getAmount();
 
             // show figures
-			result += "\t" +  String.valueOf(thisAmount) + "(" + rental.getMovie().getTitle() + ")" + "\n";
-
-			totalAmount += thisAmount;
+			result += "\t" +  String.valueOf(rental.getAmount()) + "(" + rental.getMovie().getTitle() + ")" + "\n";
 		}
 
 		result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
