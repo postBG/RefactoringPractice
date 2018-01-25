@@ -1,42 +1,69 @@
 package step1;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 class Customer {
-	private String name;
-	private List<Rental> rentals = new ArrayList<>();
+    private String name;
+    private List<Rental> rentals = new ArrayList<>();
 
-	public Customer(String name) {
-		this.name = name;
-	};
+    public Customer(String name) {
+        this.name = name;
+    }
 
-	public void addRental(Rental rental) {
-		rentals.add(rental);
-	}
+    public void addRental(Rental rental) {
+        rentals.add(rental);
+    }
 
-	public String getName() {
-		return name;
-	};
+    public String getName() {
+        return name;
+    }
 
-	public String statement() {
-		double totalAmount = 0;
-		int frequentRenterPoints = 0;
-		String result = "Rental Record for " + getName() + "\n";
+    public String statement() {
 
-		for(Rental rental : rentals) {
-            frequentRenterPoints += rental.getFrequentRenterPoints();
-            totalAmount += rental.getAmount();
+        String result = statementHeader();
+        result += getRentalLines();
+        result += statementFooter();
 
+        return result;
+    }
+
+    private String statementFooter() {
+        String result = "Amount owed is " + String.valueOf(getTotalAmount()) + "\n";
+        result += "You earned " + String.valueOf(getFrequentRenterPoints()) + " frequent renter pointers";
+        return result;
+    }
+
+    private String statementHeader() {
+        return "Rental Record for " + getName() + "\n";
+    }
+
+    private String getRentalLines() {
+        String result = "";
+
+        for (Rental rental : rentals) {
             // show figures
-			result += "\t" +  String.valueOf(rental.getAmount()) + "(" + rental.getMovie().getTitle() + ")" + "\n";
-		}
+            result += "\t" + String.valueOf(rental.getAmount()) + "(" + rental.getMovie().getTitle() + ")" + "\n";
+        }
+        return result;
+    }
 
-		result += "Amount owed is " + String.valueOf(totalAmount) + "\n";
-		result += "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter pointers";
+    private double getTotalAmount() {
+        double totalAmount = 0;
 
-		return result;
-	}
+        for (Rental rental : rentals) {
+            totalAmount += rental.getAmount();
+        }
+        return totalAmount;
+    }
+
+    private int getFrequentRenterPoints() {
+        int frequentRenterPoints = 0
+                ;
+        for (Rental rental : rentals) {
+            frequentRenterPoints += rental.getFrequentRenterPoints();
+        }
+        return frequentRenterPoints;
+    }
 
 }
