@@ -27,5 +27,7 @@ original은 legacy 코드인데 이것을 리펙토링하는 것이 목적
   * 요구사항에 맞게 설계를 변경할 수 있는가?
 * 전문 용어
   * Guard clause
-  * Type Code
-
+  * Type Code (Type마다 분기를 일으키는 코드, 예를 들면 switch)
+    * 프로그램은 타입이 추가되는 방향으로 요구사항이 바뀜
+    * 따라서 switch 문은 딱 1번만 허용됨. 여러번이면 바로 리팩토링해야함
+    * OCP

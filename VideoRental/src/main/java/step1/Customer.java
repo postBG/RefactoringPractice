@@ -33,8 +33,8 @@ class Customer {
     }
 
     public int getFrequentRenterPoints() {
-        int frequentRenterPoints = 0
-                ;
+        int frequentRenterPoints = 0;
+
         for (Rental rental : rentals) {
             frequentRenterPoints += rental.getFrequentRenterPoints();
         }
