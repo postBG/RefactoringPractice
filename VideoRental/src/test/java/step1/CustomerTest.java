@@ -78,6 +78,20 @@ public class CustomerTest {
                 "You earned 1 frequent renter pointers", customer.statement());
     }
 
+    @Test
+    public void statement_for_rent_more_than_one_movies(){
+        customer.addRental(createRental(1, Movie.REGULAR));
+        customer.addRental(createRental(2, Movie.NEW_RELEASE));
+        customer.addRental(createRental(3, Movie.CHILDRENS));
+
+        assertEquals("Rental Record for NAME_NOT_IMPORTANT\n" +
+                "\t2.0(TITLE_NOT_IMPORTANT)\n" +
+                "\t6.0(TITLE_NOT_IMPORTANT)\n" +
+                "\t1.5(TITLE_NOT_IMPORTANT)\n" +
+                "Amount owed is 9.5\n" +
+                "You earned 4 frequent renter pointers", customer.statement());
+    }
+
     private Rental createRental(int daysRented, int priceCode) {
         Movie movie = new Movie("TITLE_NOT_IMPORTANT", priceCode);
         return new Rental(movie, daysRented);

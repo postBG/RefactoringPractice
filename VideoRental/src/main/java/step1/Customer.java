@@ -1,10 +1,8 @@
 package step1;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 class Customer {
 	private String name;
@@ -29,27 +27,8 @@ class Customer {
 		String result = "Rental Record for " + getName() + "\n";
 
 		while ( iterator.hasNext() ) {
-			double thisAmount = 0;
 			Rental each = (Rental) iterator.next();
-			// determine amounts for each line
-
-			switch (each.getMovie().getPriceCode()) {
-			case Movie.REGULAR:
-				thisAmount += 2;
-				if (each.getDaysRented() > 2)
-					thisAmount += (each.getDaysRented() - 2) * 1.5;
-				break;
-				
-			case Movie.NEW_RELEASE:
-				thisAmount += each.getDaysRented() * 3;
-				break;
-				
-			case Movie.CHILDRENS:
-				thisAmount += 1.5;
-				if (each.getDaysRented() > 3)
-					thisAmount += (each.getDaysRented() - 3) * 1.5;
-				break;
-			}
+			double thisAmount = getAmount(each);
 
 			// add frequent renter points
 			frequentRenterPoints++;
@@ -66,5 +45,28 @@ class Customer {
 		result += "You earned " + String.valueOf(frequentRenterPoints) + " frequent renter pointers";
 
 		return result;
+	}
+
+	private double getAmount(Rental each) {
+		double thisAmount = 0;
+
+		switch (each.getMovie().getPriceCode()) {
+        case Movie.REGULAR:
+            thisAmount += 2;
+            if (each.getDaysRented() > 2)
+                thisAmount += (each.getDaysRented() - 2) * 1.5;
+            break;
+
+        case Movie.NEW_RELEASE:
+            thisAmount += each.getDaysRented() * 3;
+            break;
+
+        case Movie.CHILDRENS:
+            thisAmount += 1.5;
+            if (each.getDaysRented() > 3)
+                thisAmount += (each.getDaysRented() - 3) * 1.5;
+            break;
+        }
+		return thisAmount;
 	}
 }
