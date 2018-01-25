@@ -21,4 +21,8 @@ class Rental {
 		return movie.getAmount(daysRented);
 	}
 
+	public int getFrequentRenterPoints() {
+		return movie.getFrequentRenterPoints(daysRented);
+    }
+
 }

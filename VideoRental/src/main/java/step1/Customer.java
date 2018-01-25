@@ -29,13 +29,10 @@ class Customer {
 		while ( iterator.hasNext() ) {
 			Rental rental = iterator.next();
 			double thisAmount = rental.getAmount();
+            frequentRenterPoints += rental.getFrequentRenterPoints();
 
-			// add frequent renter points
-			frequentRenterPoints++;
-			// add bonus for a two day new release rental
-			if ((rental.getMovie().getPriceCode() == Movie.NEW_RELEASE) && rental.getDaysRented() > 1)
-				frequentRenterPoints++;
-			// show figures
+
+            // show figures
 			result += "\t" +  String.valueOf(thisAmount) + "(" + rental.getMovie().getTitle() + ")" + "\n";
 
 			totalAmount += thisAmount;
