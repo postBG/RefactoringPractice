@@ -17,13 +17,21 @@ public class PrivateScheduler {
 	private MailSender mailSender;
 
 	public PrivateScheduler(Person owner) {
-		this.owner = owner;
-		
-		this.timeService = new TimeService();
-		this.smsSender = new SmsSender();
-		this.mailSender = new MailSender();
+		this(owner, new MailSender());
 	}
-	
+
+	PrivateScheduler(Person owner, MailSender mailSender) {
+		this(owner, mailSender, new SmsSender());
+	}
+
+	PrivateScheduler(Person owner, MailSender mailSender, SmsSender smsSender) {
+		this.owner = owner;
+
+		this.timeService = new TimeService();
+		this.smsSender = smsSender;
+		this.mailSender = mailSender;
+	}
+
 	public void addEvent(Event event) {
 		if ( hasEvents(event.getDateTime()) )
 			throw new RuntimeException("Have an event already.");
