@@ -99,7 +99,7 @@ public class CustomerTest {
     }
 
     private Movie createMovie(int priceCode) {
-        return new Movie("TITLE_NOT_IMPORTANT", priceCode);
+        return new Movie("TITLE_NOT_IMPORTANT", new PriceFactory().createPrice(priceCode));
     }
 
 }

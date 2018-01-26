@@ -7,9 +7,9 @@ public class Movie {
 
     private String title;
 
-    public Movie(String title, int priceCode) {
+    public Movie(String title, Price price) {
         this.title = title;
-        setPriceCode(priceCode);
+        this.price = price;
     }
 
     public void setPriceCode(int priceCode){
