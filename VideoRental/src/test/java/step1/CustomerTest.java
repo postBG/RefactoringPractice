@@ -99,21 +99,7 @@ public class CustomerTest {
     }
 
     private Movie createMovie(int priceCode) {
-        String title = "TITLE_NOT_IMPORTANT";
-
-        if(priceCode == Movie.REGULAR) {
-            return new RegularMovie(title);
-        }
-
-        if(priceCode == Movie.NEW_RELEASE) {
-            return new NewReleasedMovie(title);
-        }
-
-        if(priceCode == Movie.CHILDRENS){
-            return new ChildrenMovie(title);
-        }
-
-        return new Movie(title, priceCode);
+        return new Movie("TITLE_NOT_IMPORTANT", priceCode);
     }
 
 }

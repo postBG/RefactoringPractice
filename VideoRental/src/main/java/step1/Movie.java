@@ -28,10 +28,35 @@ public class Movie {
     }
 
     public double getAmount(int daysRented) {
+
+        switch (priceCode){
+            case Movie.REGULAR:
+                double thisAmount = 2;
+
+                if (daysRented > 2)
+                    thisAmount += (daysRented - 2) * 1.5;
+
+                return thisAmount;
+            case Movie.CHILDRENS:
+                double thisAmount1 = 1.5;
+
+                if (daysRented > 3)
+                    thisAmount1 += (daysRented - 3) * 1.5;
+
+                return thisAmount1;
+            case Movie.NEW_RELEASE:
+                return (double) (daysRented * 3);
+        }
+
         return (double) 0;
     }
 
     public int getFrequentRenterPoints(int daysRented) {
+        if(priceCode == Movie.NEW_RELEASE && daysRented > 1){
+            return BASE_FREQUENT_RENTER_POINTS + ADDITIONAL_FREQUENT_RENTAL_POINTS;
+        }
+
         return BASE_FREQUENT_RENTER_POINTS;
     }
+
 }
