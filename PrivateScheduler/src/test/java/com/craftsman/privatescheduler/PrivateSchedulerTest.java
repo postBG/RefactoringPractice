@@ -56,7 +56,7 @@ public class PrivateSchedulerTest {
     }
 
     @Test
-    public void addEvent__서로다른_시간이고_현재이후의_시간이면_이벤트에_다_추가된다(){
+    public void addEvent__서로다른_시간이고_현재이후의_시간이면_이벤트에_다_추가된다() {
         DateTime timeAfterNow = new DateTime().plusSeconds(2);
         DateTime timeAfterNow2 = timeAfterNow.plusSeconds(2);
 
@@ -68,7 +68,7 @@ public class PrivateSchedulerTest {
     }
 
     @Test
-    public void addEvent_1시간_이내의_이벤트는_sms와_email_kakao들을_발송한다(){
+    public void addEvent_1시간_이내의_이벤트는_sms와_email_kakao들을_발송한다() {
         MailSender mailSender = mock(MailSender.class);
         SmsSender smsSender = mock(SmsSender.class);
         TimeService timeService = mock(TimeService.class);
@@ -89,7 +89,7 @@ public class PrivateSchedulerTest {
     }
 
     @Test
-    public void addEvent__1시간이_넘게_남은_이벤트는_email만_보내고_sms는_보내지_않는다(){
+    public void addEvent__1시간이_넘게_남은_이벤트는_email만_보내고_sms는_보내지_않는다() {
         MailSender mailSender = mock(MailSender.class);
         SmsSender smsSender = mock(SmsSender.class);
         TimeService timeService = mock(TimeService.class);
@@ -110,7 +110,7 @@ public class PrivateSchedulerTest {
     }
 
     @Test
-    public void addEvent__밤11시후부터_자정까지는_이벤트를_추가할_수_없다(){
+    public void addEvent__밤11시후부터_자정까지는_이벤트를_추가할_수_없다() {
         expectedException.expect(RuntimeException.class);
         expectedException.expectMessage("Event should not be added at night.");
 
@@ -125,7 +125,7 @@ public class PrivateSchedulerTest {
     }
 
     @Test
-    public void addEvent__자정부터_익일새벽5시전까지는_이벤트를_추가할_수_없다(){
+    public void addEvent__자정부터_익일새벽5시전까지는_이벤트를_추가할_수_없다() {
         expectedException.expect(RuntimeException.class);
         expectedException.expectMessage("Event should not be added at night.");
 

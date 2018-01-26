@@ -11,7 +11,7 @@ public class KakaoTalkSender implements Observer {
         sendKakao(privateScheduler.getOwner().getKakaoId(), event);
     }
 
-    public void sendKakao(String kakaoId, Event event){
+    public void sendKakao(String kakaoId, Event event) {
 
     }
 }
