@@ -3,13 +3,13 @@ package step1;
 public class Movie {
     public static final int BASE_FREQUENT_RENTER_POINTS = 1;
     public static final int ADDITIONAL_FREQUENT_RENTAL_POINTS = 1;
-    private final Price price = new Price();
+    private final Price price;
 
     private String title;
 
     public Movie(String title, int priceCode) {
         this.title = title;
-        this.price.setPriceCode(priceCode);
+        this.price = new Price(priceCode);
     }
 
     public String getTitle() {

@@ -4,21 +4,14 @@ public class Price {
     public static final int CHILDRENS = 2;
     public static final int REGULAR = 0;
     public static final int NEW_RELEASE = 1;
-    int priceCode;
+    private final int priceCode;
 
-    public Price() {
-    }
-
-    public int getPriceCode() {
-        return priceCode;
-    }
-
-    public void setPriceCode(int arg) {
-        priceCode = arg;
+    public Price(int priceCode) {
+        this.priceCode = priceCode;
     }
 
     double getAmount(int daysRented) {
-        switch (getPriceCode()) {
+        switch (priceCode) {
             case REGULAR:
                 double thisAmount = 2;
 
@@ -41,7 +34,7 @@ public class Price {
     }
 
     int getFrequentRenterPoints(int daysRented) {
-        if (getPriceCode() == NEW_RELEASE && daysRented > 1) {
+        if (priceCode == NEW_RELEASE && daysRented > 1) {
             return Movie.BASE_FREQUENT_RENTER_POINTS + Movie.ADDITIONAL_FREQUENT_RENTAL_POINTS;
         }
 
