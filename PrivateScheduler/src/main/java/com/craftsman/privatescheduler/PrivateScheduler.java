@@ -13,26 +13,20 @@ public class PrivateScheduler extends Observable {
 	
 	private TimeService timeService;
 	private SmsSender smsSender;
-	private MailSender mailSender;
 
-	public PrivateScheduler(Person owner) {
-		this(owner, new MailSender());
+	PrivateScheduler(Person owner){
+	    this(owner, new SmsSender());
+    }
+
+	PrivateScheduler(Person owner, SmsSender smsSender) {
+        this(owner, smsSender, new TimeService());
 	}
 
-	PrivateScheduler(Person owner, MailSender mailSender) {
-		this(owner, mailSender, new SmsSender());
-	}
-
-	PrivateScheduler(Person owner, MailSender mailSender, SmsSender smsSender) {
-        this(owner, mailSender, smsSender, new TimeService());
-	}
-
-    PrivateScheduler(Person owner, MailSender mailSender, SmsSender smsSender, TimeService timeService) {
+    PrivateScheduler(Person owner, SmsSender smsSender, TimeService timeService) {
         this.owner = owner;
 
         this.timeService = timeService;
         this.smsSender = smsSender;
-        this.mailSender = mailSender;
     }
 
     public Person getOwner() {
@@ -62,7 +56,6 @@ public class PrivateScheduler extends Observable {
 			smsSender.send(owner.getPhoneNumber(),event);
 		}
 
-		mailSender.sendMail(owner.getEmail(),event);
 	}
 
     public boolean hasEvents(DateTime dateTime) {

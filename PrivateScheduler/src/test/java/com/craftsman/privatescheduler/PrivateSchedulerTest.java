@@ -68,20 +68,6 @@ public class PrivateSchedulerTest {
     }
 
     @Test
-    public void addEvent__이벤트가_등록되면_mail을_보낸다(){
-        DateTime timeAfterNow = new DateTime().plusSeconds(2);
-        MailSender mailSender = mock(MailSender.class);
-
-        String email = "EMAIL_NOT_IMPORTANT";
-        privateScheduler = new PrivateScheduler(createPerson(email), mailSender);
-
-        Event event = createEventAt(timeAfterNow);
-        privateScheduler.addEvent(event);
-
-        verify(mailSender, times(1)).sendMail(email, event);
-    }
-
-    @Test
     public void addEvent_1시간_이내의_이벤트는_sms와_email_kakao들을_발송한다(){
         MailSender mailSender = mock(MailSender.class);
         SmsSender smsSender = mock(SmsSender.class);
@@ -89,15 +75,16 @@ public class PrivateSchedulerTest {
         when(timeService.now()).thenReturn(TIME_BEFORE_NIGHT);
         KakaoTalkSender kakaoTalkSender = mock(KakaoTalkSender.class);
 
-        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), mailSender, smsSender, timeService);
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), smsSender, timeService);
         privateScheduler.addObserver(kakaoTalkSender);
+        privateScheduler.addObserver(mailSender);
 
         DateTime timeLessThan1hourLeft = TIME_BEFORE_NIGHT.plusSeconds(2);
         Event event = createEventAt(timeLessThan1hourLeft);
         privateScheduler.addEvent(event);
 
         verify(smsSender, times(1)).send(PHONE_NUMBER, event);
-        verify(mailSender, times(1)).sendMail(EMAIL, event);
+        verify(mailSender, times(1)).update(privateScheduler, event);
         verify(kakaoTalkSender, times(1)).update(privateScheduler, event);
     }
 
@@ -109,7 +96,7 @@ public class PrivateSchedulerTest {
         when(timeService.now()).thenReturn(TIME_BEFORE_NIGHT);
         KakaoTalkSender kakaoTalkSender = mock(KakaoTalkSender.class);
 
-        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), mailSender, smsSender, timeService);
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), smsSender, timeService);
         privateScheduler.addObserver(kakaoTalkSender);
         privateScheduler.addObserver(mailSender);
 
@@ -118,7 +105,8 @@ public class PrivateSchedulerTest {
         privateScheduler.addEvent(event);
 
         verify(smsSender, never()).send(PHONE_NUMBER, event);
-        verify(mailSender, times(1)).sendMail(EMAIL, event);
+        verify(mailSender, times(1)).update(privateScheduler, event);
+        verify(kakaoTalkSender, times(1)).update(privateScheduler, event);
     }
 
     @Test
@@ -126,12 +114,11 @@ public class PrivateSchedulerTest {
         expectedException.expect(RuntimeException.class);
         expectedException.expectMessage("Event should not be added at night.");
 
-        MailSender mailSender = mock(MailSender.class);
         SmsSender smsSender = mock(SmsSender.class);
         TimeService timeService = mock(TimeService.class);
         when(timeService.now()).thenReturn(new DateTime(2018, 1, 26, 23, 0));
 
-        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), mailSender, smsSender, timeService);
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), smsSender, timeService);
 
         Event event = createEventAt(TIME_BEFORE_NIGHT);
         privateScheduler.addEvent(event);
@@ -142,12 +129,11 @@ public class PrivateSchedulerTest {
         expectedException.expect(RuntimeException.class);
         expectedException.expectMessage("Event should not be added at night.");
 
-        MailSender mailSender = mock(MailSender.class);
         SmsSender smsSender = mock(SmsSender.class);
         TimeService timeService = mock(TimeService.class);
         when(timeService.now()).thenReturn(new DateTime(2018, 1, 26, 4, 0));
 
-        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), mailSender, smsSender, timeService);
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), smsSender, timeService);
 
         Event event = createEventAt(TIME_BEFORE_NIGHT);
         privateScheduler.addEvent(event);
