@@ -27,4 +27,7 @@ public class TimeService {
 		return false;
 	}
 
+	DateTime now() {
+        return new DateTime();
+    }
 }

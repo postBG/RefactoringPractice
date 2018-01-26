@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeConstants;
-import org.joda.time.Days;
 import org.joda.time.Hours;
 
 public class PrivateScheduler {
@@ -25,27 +23,29 @@ public class PrivateScheduler {
 	}
 
 	PrivateScheduler(Person owner, MailSender mailSender, SmsSender smsSender) {
-		this.owner = owner;
-
-		this.timeService = new TimeService();
-		this.smsSender = smsSender;
-		this.mailSender = mailSender;
+        this(owner, mailSender, smsSender, new TimeService());
 	}
 
-	public void addEvent(Event event) {
+    PrivateScheduler(Person owner, MailSender mailSender, SmsSender smsSender, TimeService timeService) {
+        this.owner = owner;
+
+        this.timeService = timeService;
+        this.smsSender = smsSender;
+        this.mailSender = mailSender;
+    }
+
+    public void addEvent(Event event) {
 		if ( hasEvents(event.getDateTime()) )
 			throw new RuntimeException("Have an event already.");
 
-		DateTime now = new DateTime();
+		DateTime now = timeService.now();
 		if ( event.getDateTime().isBefore(now) ) {
 			throw new RuntimeException("Event is before now.");
 		}
 
-		/*
 		if ( now.getHourOfDay() < 5 || now.getHourOfDay() > 22 ) {
 			throw new RuntimeException("Event should not be added at night.");
 		}
-		*/
 
 		events.add(event);
 
@@ -57,7 +57,7 @@ public class PrivateScheduler {
 		mailSender.sendMail(owner.getEmail(),event);
 	}
 
-	public boolean hasEvents(DateTime dateTime) {
+    public boolean hasEvents(DateTime dateTime) {
 		for ( Event event : events ) {
 			if ( event.getDateTime().isEqual(dateTime) ) {
 				return true;

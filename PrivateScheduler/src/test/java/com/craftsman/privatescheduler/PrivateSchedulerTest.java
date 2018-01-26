@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 public class PrivateSchedulerTest {
+    public static final DateTime TIME_BEFORE_NIGHT = new DateTime(2018, 1, 27, 5, 0, 0);
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
@@ -78,12 +79,14 @@ public class PrivateSchedulerTest {
 
     @Test
     public void addEvent_1시간_이내의_이벤트는_sms와_email을_발송한다(){
-        DateTime timeLessThan1hourLeft = new DateTime().plusSeconds(2);
         MailSender mailSender = mock(MailSender.class);
         SmsSender smsSender = mock(SmsSender.class);
+        TimeService timeService = mock(TimeService.class);
+        when(timeService.now()).thenReturn(TIME_BEFORE_NIGHT);
 
-        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER), mailSender, smsSender);
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER), mailSender, smsSender, timeService);
 
+        DateTime timeLessThan1hourLeft = TIME_BEFORE_NIGHT.plusSeconds(2);
         Event event = createEventAt(timeLessThan1hourLeft);
         privateScheduler.addEvent(event);
 
@@ -93,17 +96,51 @@ public class PrivateSchedulerTest {
 
     @Test
     public void addEvent__1시간이_넘게_남은_이벤트는_email만_보내고_sms는_보내지_않는다(){
-        DateTime timeMoreThan1hourLeft = new DateTime().plusSeconds(2).plusHours(1);
         MailSender mailSender = mock(MailSender.class);
         SmsSender smsSender = mock(SmsSender.class);
+        TimeService timeService = mock(TimeService.class);
+        when(timeService.now()).thenReturn(TIME_BEFORE_NIGHT);
 
-        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER), mailSender, smsSender);
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER), mailSender, smsSender, timeService);
 
+        DateTime timeMoreThan1hourLeft = TIME_BEFORE_NIGHT.plusSeconds(2).plusHours(1);
         Event event = createEventAt(timeMoreThan1hourLeft);
         privateScheduler.addEvent(event);
 
         verify(smsSender, never()).send(PHONE_NUMBER, event);
         verify(mailSender, times(1)).sendMail(EMAIL, event);
+    }
+
+    @Test
+    public void addEvent__밤11시후부터_자정까지는_이벤트를_추가할_수_없다(){
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage("Event should not be added at night.");
+
+        MailSender mailSender = mock(MailSender.class);
+        SmsSender smsSender = mock(SmsSender.class);
+        TimeService timeService = mock(TimeService.class);
+        when(timeService.now()).thenReturn(new DateTime(2018, 1, 26, 23, 0));
+
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER), mailSender, smsSender, timeService);
+
+        Event event = createEventAt(TIME_BEFORE_NIGHT);
+        privateScheduler.addEvent(event);
+    }
+
+    @Test
+    public void addEvent__자정부터_익일새벽5시전까지는_이벤트를_추가할_수_없다(){
+        expectedException.expect(RuntimeException.class);
+        expectedException.expectMessage("Event should not be added at night.");
+
+        MailSender mailSender = mock(MailSender.class);
+        SmsSender smsSender = mock(SmsSender.class);
+        TimeService timeService = mock(TimeService.class);
+        when(timeService.now()).thenReturn(new DateTime(2018, 1, 26, 4, 0));
+
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER), mailSender, smsSender, timeService);
+
+        Event event = createEventAt(TIME_BEFORE_NIGHT);
+        privateScheduler.addEvent(event);
     }
 
     private Event createEventAt(DateTime dateTime) {
