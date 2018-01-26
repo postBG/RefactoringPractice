@@ -12,17 +12,14 @@ public class PrivateScheduler extends Observable {
     private List<Event> events = new ArrayList<Event>();
 
     private TimeService timeService;
-    private SmsSender smsSender;
 
     PrivateScheduler(Person owner) {
-        this(owner, new SmsSender(), new TimeService());
+        this(owner, new TimeService());
     }
 
-    PrivateScheduler(Person owner, SmsSender smsSender, TimeService timeService) {
+    PrivateScheduler(Person owner, TimeService timeService) {
         this.owner = owner;
-
         this.timeService = timeService;
-        this.smsSender = smsSender;
     }
 
     public Person getOwner() {
@@ -46,12 +43,6 @@ public class PrivateScheduler extends Observable {
 
         this.setChanged();
         this.notifyObservers(event);
-
-        Hours hours = Hours.hoursBetween(now, event.getDateTime());
-        if (hours.getHours() < 1) {
-            smsSender.send(owner.getPhoneNumber(), event);
-        }
-
     }
 
     public boolean hasEvents(DateTime dateTime) {
