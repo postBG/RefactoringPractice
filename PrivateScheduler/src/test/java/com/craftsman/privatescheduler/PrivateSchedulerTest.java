@@ -11,12 +11,16 @@ import org.junit.rules.ExpectedException;
 
 public class PrivateSchedulerTest {
     public static final DateTime TIME_BEFORE_NIGHT = new DateTime(2018, 1, 27, 5, 0, 0);
+
+    private static final String KAKAO_ID = "KAKAO_ID_NOT_IMPORTANT";
+    private static final String PHONE_NUMBER = "PHONE_NUMBER_NOT_IMPORTANT";
+    private static final String EMAIL = "EMAIL_NOT_IMPORTANT";
+
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
 
     private PrivateScheduler privateScheduler;
-    private static final String PHONE_NUMBER = "PHONE_NUMBER_NOT_IMPORTANT";
-    private static final String EMAIL = "EMAIL_NOT_IMPORTANT";
+
 
     @Before
     public void setUp() {
@@ -78,13 +82,15 @@ public class PrivateSchedulerTest {
     }
 
     @Test
-    public void addEvent_1시간_이내의_이벤트는_sms와_email을_발송한다(){
+    public void addEvent_1시간_이내의_이벤트는_sms와_email_kakao들을_발송한다(){
         MailSender mailSender = mock(MailSender.class);
         SmsSender smsSender = mock(SmsSender.class);
         TimeService timeService = mock(TimeService.class);
         when(timeService.now()).thenReturn(TIME_BEFORE_NIGHT);
+        KakaoTalkSender kakaoTalkSender = mock(KakaoTalkSender.class);
 
-        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER), mailSender, smsSender, timeService);
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), mailSender, smsSender, timeService);
+        privateScheduler.addObserver(kakaoTalkSender);
 
         DateTime timeLessThan1hourLeft = TIME_BEFORE_NIGHT.plusSeconds(2);
         Event event = createEventAt(timeLessThan1hourLeft);
@@ -92,6 +98,7 @@ public class PrivateSchedulerTest {
 
         verify(smsSender, times(1)).send(PHONE_NUMBER, event);
         verify(mailSender, times(1)).sendMail(EMAIL, event);
+        verify(kakaoTalkSender, times(1)).update(privateScheduler, event);
     }
 
     @Test
@@ -100,8 +107,11 @@ public class PrivateSchedulerTest {
         SmsSender smsSender = mock(SmsSender.class);
         TimeService timeService = mock(TimeService.class);
         when(timeService.now()).thenReturn(TIME_BEFORE_NIGHT);
+        KakaoTalkSender kakaoTalkSender = mock(KakaoTalkSender.class);
 
-        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER), mailSender, smsSender, timeService);
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), mailSender, smsSender, timeService);
+        privateScheduler.addObserver(kakaoTalkSender);
+        privateScheduler.addObserver(mailSender);
 
         DateTime timeMoreThan1hourLeft = TIME_BEFORE_NIGHT.plusSeconds(2).plusHours(1);
         Event event = createEventAt(timeMoreThan1hourLeft);
@@ -121,7 +131,7 @@ public class PrivateSchedulerTest {
         TimeService timeService = mock(TimeService.class);
         when(timeService.now()).thenReturn(new DateTime(2018, 1, 26, 23, 0));
 
-        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER), mailSender, smsSender, timeService);
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), mailSender, smsSender, timeService);
 
         Event event = createEventAt(TIME_BEFORE_NIGHT);
         privateScheduler.addEvent(event);
@@ -137,7 +147,7 @@ public class PrivateSchedulerTest {
         TimeService timeService = mock(TimeService.class);
         when(timeService.now()).thenReturn(new DateTime(2018, 1, 26, 4, 0));
 
-        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER), mailSender, smsSender, timeService);
+        privateScheduler = new PrivateScheduler(createPerson(EMAIL, PHONE_NUMBER, KAKAO_ID), mailSender, smsSender, timeService);
 
         Event event = createEventAt(TIME_BEFORE_NIGHT);
         privateScheduler.addEvent(event);
@@ -148,11 +158,11 @@ public class PrivateSchedulerTest {
     }
 
     private Person createPerson(String email) {
-        return createPerson(email, null);
+        return createPerson(email, null, KAKAO_ID);
     }
 
-    private Person createPerson(String email, String phoneNumber) {
-        return new Person(null, phoneNumber, email);
+    private Person createPerson(String email, String phoneNumber, String kakaoId) {
+        return new Person(null, phoneNumber, email, KAKAO_ID);
     }
 
 }

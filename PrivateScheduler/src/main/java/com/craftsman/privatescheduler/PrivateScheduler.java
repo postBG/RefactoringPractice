@@ -2,11 +2,12 @@ package com.craftsman.privatescheduler;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
 import org.joda.time.DateTime;
 import org.joda.time.Hours;
 
-public class PrivateScheduler {
+public class PrivateScheduler extends Observable {
 	private Person owner;
 	private List<Event> events = new ArrayList<Event>();
 	
@@ -34,6 +35,10 @@ public class PrivateScheduler {
         this.mailSender = mailSender;
     }
 
+    public Person getOwner() {
+        return owner;
+    }
+
     public void addEvent(Event event) {
 		if ( hasEvents(event.getDateTime()) )
 			throw new RuntimeException("Have an event already.");
@@ -48,6 +53,9 @@ public class PrivateScheduler {
 		}
 
 		events.add(event);
+
+        this.setChanged();
+		this.notifyObservers(event);
 
 		Hours hours = Hours.hoursBetween(now, event.getDateTime());
 		if ( hours.getHours() < 1 ) {
